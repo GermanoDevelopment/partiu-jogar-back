@@ -3,7 +3,7 @@ import { Column, Entity, ManyToOne, OneToOne } from 'typeorm';
 import { User } from '../../../modules/user/entities/user.entity';
 import { Schedule } from '../../../modules/schedule/entities/schedule.entity';
 import { Supervisor } from '../../../modules/supervisor/entities/supervisor.entity';
-import { Court } from 'src/modules/court/entities/court.entity';
+import { Court } from '../../../modules/court/entities/court.entity';
 
 @Entity()
 export class Booktime extends AbstractEntity {

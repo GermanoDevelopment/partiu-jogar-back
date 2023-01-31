@@ -13,7 +13,7 @@ export class Court extends AbstractEntity {
     location: string;
 
     // relations
-    @OneToOne(() => Schedule, (schedule) => schedule.school)
+    @OneToOne(() => Schedule, (schedule) => schedule.court)
     schedule: Schedule;
     @ManyToOne(() => School, (school) => school.court)
     school: School;
