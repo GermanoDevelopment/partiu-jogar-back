@@ -1,0 +1,56 @@
+import { Injectable } from '@nestjs/common';
+import { InjectRepository } from '@nestjs/typeorm';
+import { Repository } from 'typeorm';
+import { CreateUserDto } from './dto/CreateUserDto';
+import { FindUserDto } from './dto/FindUserDto';
+import { UpdateUserDto } from './dto/UpdateUserDto';
+import { User } from './entities/user.entity';
+
+@Injectable()
+export class UserService {
+  
+  constructor(
+    @InjectRepository(User)
+    private readonly repo: Repository<User>,
+  ) {}
+
+  async findBy(options: Partial<{
+    id: string,
+    cpf: string,
+    name: string,
+    email: string
+  }>): Promise<User> {
+    return await this.repo.findOneBy({
+      id: options.id,
+      cpf: options.cpf,
+      firstname: options.name,
+      email: options.email,
+    });
+  }
+
+  async create(createUserDto: CreateUserDto): Promise<User> {
+    // TODO: validate cpf
+    // TODO: validate email
+    // TODO: validate password
+    return await this.repo.save(createUserDto);
+  }
+
+  async findAll(): Promise<User[]> {
+    return await this.repo.find();
+  }
+
+  async findOne(id: string): Promise<User> {
+    return await this.findBy({ id });
+  }
+
+  async update(id: string, updateUserDto: UpdateUserDto): Promise<User> {
+    await this.repo.update(id, updateUserDto);
+    return await this.findBy({ id });
+  }
+
+  async remove(id: string): Promise<User> {
+    const removed = await this.findBy({ id });
+    await this.repo.delete(id);
+    return removed;
+  }
+}
