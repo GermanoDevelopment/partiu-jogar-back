@@ -1,6 +1,7 @@
-import { AbstractEntity } from "../../../common/abstract.entity";
-import { Column, Entity } from "typeorm";
-import { ERole } from "../../../constants/role.enum";
+import { AbstractEntity } from '../../../common/abstract.entity';
+import { Column, Entity, OneToMany } from 'typeorm';
+import { ERole } from '../../../constants/role.enum';
+import { Booktime } from '../../../modules/booktime/entities/booktime.entity';
 
 @Entity()
 export class User extends AbstractEntity {
@@ -22,8 +23,10 @@ export class User extends AbstractEntity {
     @Column({ nullable: false, default: false })
     confirmed: boolean;
 
-    @Column({ nullable: false, default: ERole.USER, enum: ERole, type: "enum" })
+    @Column({ nullable: false, default: ERole.USER, enum: ERole, type: 'enum' })
     role: ERole;
     
     // relations
+    @OneToMany(() => Booktime, (booktime) => booktime.applicant)
+    booktimes: Booktime[];
 }
