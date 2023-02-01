@@ -1,3 +1,4 @@
+import { UserModule } from './modules/user/user.module';
 import { Module } from '@nestjs/common';
 import { TypeOrmModule } from '@nestjs/typeorm';
 import { AppController } from './app.controller';
@@ -20,6 +21,7 @@ import { ApiConfigService } from './shared/services/api-config.service';
       },
     }),
     SharedModule,
+    UserModule,
     SchoolModule,
     ScheduleModule,
     BooktimeModule,

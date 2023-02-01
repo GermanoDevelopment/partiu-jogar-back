@@ -1,7 +1,7 @@
 import { AbstractEntity } from '../../../common/abstract.entity';
 import { Column, Entity, ManyToOne, OneToMany } from 'typeorm';
-import { Court } from '../../../modules/court/entities/court.entity';
 import { Supervisor } from '../../../modules/supervisor/entities/supervisor.entity';
+import { Court } from '../../../modules/court/entities/court.entity';
 
 @Entity()
 export class School extends AbstractEntity {

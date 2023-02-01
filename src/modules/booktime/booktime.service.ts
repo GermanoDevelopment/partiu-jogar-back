@@ -1,6 +1,6 @@
 import { Injectable } from '@nestjs/common';
-import { CreateBooktimeDto } from './dto/create-booktime.dto';
-import { UpdateBooktimeDto } from './dto/update-booktime.dto';
+import { CreateBooktimeDto } from './dto/CreateBooktimeDto';
+import { UpdateBooktimeDto } from './dto/UpdateBooktimeDto';
 
 @Injectable()
 export class BooktimeService {

@@ -1,26 +1,37 @@
 import { Injectable } from '@nestjs/common';
-import { CreateSupervisorDto } from './dto/create-supervisor.dto';
-import { UpdateSupervisorDto } from './dto/update-supervisor.dto';
+import { InjectRepository } from '@nestjs/typeorm';
+import { Repository } from 'typeorm';
+import { CreateSupervisorDto } from './dto/CreateSupervisorDto';
+import { Supervisor } from './entities/supervisor.entity';
+import { UpdateSupervisorDto } from './dto/UpdateUserDto';
 
 @Injectable()
 export class SupervisorService {
-  create(createSupervisorDto: CreateSupervisorDto) {
-    return 'This action adds a new supervisor';
-  }
+  constructor(
+    @InjectRepository(Supervisor)
+    private readonly repo: Repository<Supervisor>,
+  ) {}
 
-  findAll() {
-    return `This action returns all supervisor`;
-  }
+  async create(createSupervisorDto: CreateSupervisorDto): Promise<Supervisor> {
+      return await this.repo.save(createSupervisorDto);
+    }
 
-  findOne(id: number) {
-    return `This action returns a #${id} supervisor`;
-  }
+  async findAll(): Promise<Supervisor[]> {
+      return await this.repo.find();
+    }
 
-  update(id: number, updateSupervisorDto: UpdateSupervisorDto) {
-    return `This action updates a #${id} supervisor`;
-  }
+  async findOne(id: string): Promise<Supervisor> {
+      return await this.findOne(id);
+    }
 
-  remove(id: number) {
-    return `This action removes a #${id} supervisor`;
-  }
+  async update(id: string, UpdateSupervisorDto: UpdateSupervisorDto): Promise<Supervisor> {
+      await this.repo.update(id, UpdateSupervisorDto);
+      return await this.findOne(id);
+    }
+
+    async remove(id: string): Promise<Supervisor> {
+      const removed = await this.findOne(id);
+      await this.repo.delete(id);
+      return removed;
+    }
 }

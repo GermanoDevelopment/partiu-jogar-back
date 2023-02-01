@@ -1,6 +1,6 @@
 import { Entity, ManyToOne, OneToMany } from 'typeorm';
-import { User } from '../../../modules/user/entities/user.entity';
 import { School } from '../../../modules/school/entities/school.entity';
+import { User } from '../../../modules/user/entities/user.entity';
 import { Booktime } from '../../../modules/booktime/entities/booktime.entity';
 
 @Entity()

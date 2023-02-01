@@ -2,7 +2,6 @@ import { Injectable } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Repository } from 'typeorm';
 import { CreateUserDto } from './dto/CreateUserDto';
-import { FindUserDto } from './dto/FindUserDto';
 import { UpdateUserDto } from './dto/UpdateUserDto';
 import { User } from './entities/user.entity';
 
@@ -13,6 +12,10 @@ export class UserService {
     @InjectRepository(User)
     private readonly repo: Repository<User>,
   ) {}
+
+    async create(createUserDto: CreateUserDto): Promise<User> {
+      return await this.repo.save(createUserDto);
+    }
 
   async findBy(options: Partial<{
     id: string,
@@ -28,24 +31,17 @@ export class UserService {
     });
   }
 
-  async create(createUserDto: CreateUserDto): Promise<User> {
-    // TODO: validate cpf
-    // TODO: validate email
-    // TODO: validate password
-    return await this.repo.save(createUserDto);
-  }
-
   async findAll(): Promise<User[]> {
     return await this.repo.find();
   }
 
   async findOne(id: string): Promise<User> {
-    return await this.findBy({ id });
+    return await this.findOne(id);
   }
 
   async update(id: string, updateUserDto: UpdateUserDto): Promise<User> {
     await this.repo.update(id, updateUserDto);
-    return await this.findBy({ id });
+    return await this.findOne(id);
   }
 
   async remove(id: string): Promise<User> {

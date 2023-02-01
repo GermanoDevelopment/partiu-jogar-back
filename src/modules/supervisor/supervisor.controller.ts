@@ -1,34 +1,35 @@
 import { Controller, Get, Post, Body, Patch, Param, Delete } from '@nestjs/common';
 import { SupervisorService } from './supervisor.service';
-import { CreateSupervisorDto } from './dto/create-supervisor.dto';
-import { UpdateSupervisorDto } from './dto/update-supervisor.dto';
+import { CreateSupervisorDto } from './dto/CreateSupervisorDto';
+import { Supervisor } from './entities/supervisor.entity';
+import { UpdateSupervisorDto } from './dto/UpdateUserDto';
 
 @Controller('supervisor')
 export class SupervisorController {
   constructor(private readonly supervisorService: SupervisorService) {}
 
-  @Post()
-  create(@Body() createSupervisorDto: CreateSupervisorDto) {
-    return this.supervisorService.create(createSupervisorDto);
+  @Post('create-supervisor')
+  async create(@Body() createSupervisorDto: CreateSupervisorDto): Promise<Supervisor> {
+    return await this.supervisorService.create(createSupervisorDto);
   }
 
-  @Get()
-  findAll() {
-    return this.supervisorService.findAll();
+  @Get('get-all-supervisor')
+  async findAll(): Promise<Supervisor[]> {
+    return await this.supervisorService.findAll();
   }
 
-  @Get(':id')
-  findOne(@Param('id') id: string) {
-    return this.supervisorService.findOne(+id);
+  @Get('get-supervisor/:id')
+  async findOne(@Param('id') id: string): Promise<Supervisor> {
+    return await this.supervisorService.findOne(id);
   }
 
-  @Patch(':id')
-  update(@Param('id') id: string, @Body() updateSupervisorDto: UpdateSupervisorDto) {
-    return this.supervisorService.update(+id, updateSupervisorDto);
+  @Patch('update-supervisor/:id')
+  async update(@Param('id') id: string, @Body() updateSupervisorDto: UpdateSupervisorDto): Promise<Supervisor> {
+    return await this.supervisorService.update(id, updateSupervisorDto);
   }
 
-  @Delete(':id')
-  remove(@Param('id') id: string) {
-    return this.supervisorService.remove(+id);
+  @Delete('delete-supervisor/:id')
+  async remove(@Param('id') id: string): Promise<Supervisor> {
+    return await this.supervisorService.remove(id);
   }
 }

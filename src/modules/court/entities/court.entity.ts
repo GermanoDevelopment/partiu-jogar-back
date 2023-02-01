@@ -1,7 +1,7 @@
+import { Schedule } from '../../../modules/schedule/entities/schedule.entity';
 import { AbstractEntity } from '../../../common/abstract.entity';
 import { Column, Entity, ManyToOne, OneToOne } from 'typeorm';
 import { School } from '../../../modules/school/entities/school.entity';
-import { Schedule } from '../../../modules/schedule/entities/schedule.entity';
 
 @Entity()
 export class Court extends AbstractEntity {
