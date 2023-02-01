@@ -1,1 +1,3 @@
-export class CreateSchoolDto {}
+import { SchoolDto } from "./SchoolDto";
+
+export class CreateSchoolDto extends SchoolDto {}

@@ -2,33 +2,36 @@ import { Controller, Get, Post, Body, Patch, Param, Delete } from '@nestjs/commo
 import { SchoolService } from './school.service';
 import { CreateSchoolDto } from './dto/CreateSchoolDto';
 import { UpdateSchoolDto } from './dto/UpdateSchoolDto';
+import { ApiTags } from '@nestjs/swagger';
+import { School } from './entities/school.entity';
 
+@ApiTags('School')
 @Controller('school')
 export class SchoolController {
   constructor(private readonly schoolService: SchoolService) {}
 
-  @Post()
-  create(@Body() createSchoolDto: CreateSchoolDto) {
-    return this.schoolService.create(createSchoolDto);
+  @Post('create-school')
+  async create(@Body() createSchoolDto: CreateSchoolDto): Promise<School> {
+    return await this.schoolService.create(createSchoolDto);
   }
 
-  @Get()
-  findAll() {
-    return this.schoolService.findAll();
+  @Get('get-all-schools')
+  async findAll(): Promise<School[]> {
+    return await this.schoolService.findAll();
   }
 
-  @Get(':id')
-  findOne(@Param('id') id: string) {
-    return this.schoolService.findOne(+id);
+  @Get('get-school/:id')
+  async findOne(@Param('id') id: string): Promise<School> {
+    return await this.schoolService.findOne(id);
   }
 
-  @Patch(':id')
-  update(@Param('id') id: string, @Body() updateSchoolDto: UpdateSchoolDto) {
-    return this.schoolService.update(+id, updateSchoolDto);
+  @Patch('update-school/:id')
+  async update(@Param('id') id: string, @Body() updateSchoolDto: UpdateSchoolDto): Promise<School> {
+    return await this.schoolService.update(id, updateSchoolDto);
   }
 
-  @Delete(':id')
-  remove(@Param('id') id: string) {
-    return this.schoolService.remove(+id);
+  @Delete('delete-school/:id')
+  async remove(@Param('id') id: string): Promise<School> {
+    return await this.schoolService.remove(id);
   }
 }

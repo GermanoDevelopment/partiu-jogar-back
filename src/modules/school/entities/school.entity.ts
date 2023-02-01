@@ -1,10 +1,12 @@
 import { AbstractEntity } from '../../../common/abstract.entity';
-import { Column, Entity, ManyToOne, OneToMany } from 'typeorm';
+import { Column, Entity, OneToMany } from 'typeorm';
 import { Supervisor } from '../../../modules/supervisor/entities/supervisor.entity';
 import { Court } from '../../../modules/court/entities/court.entity';
+import { ApiProperty } from '@nestjs/swagger';
 
 @Entity()
 export class School extends AbstractEntity {
+    @ApiProperty()
     @Column({ nullable: false })
     name: string;
     @Column({ nullable: true })
