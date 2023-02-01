@@ -1,4 +1,4 @@
 import { CreateUserDto } from './CreateUserDto';
-import { ApiPropertyOptional, PartialType } from "@nestjs/swagger";
+import { PartialType } from "@nestjs/swagger";
 
-export class UpdateUserDto extends PartialType(CreateUserDto    ) {}
+export class UpdateUserDto extends PartialType(CreateUserDto) {}

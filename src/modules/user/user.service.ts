@@ -39,8 +39,8 @@ export class UserService {
     return await this.findBy({ id });
   }
 
-  async update(id: string, updateUserDto: UpdateUserDto): Promise<User> {
-    await this.repo.update(id, updateUserDto);
+  async update(id: string, UpdateUserDto: UpdateUserDto): Promise<User> {
+    await this.repo.update(id, UpdateUserDto);
     return await this.findBy({ id });
   }
 
