@@ -3,7 +3,9 @@ import { SupervisorService } from './supervisor.service';
 import { CreateSupervisorDto } from './dto/CreateSupervisorDto';
 import { Supervisor } from './entities/supervisor.entity';
 import { UpdateSupervisorDto } from './dto/UpdateSupervisorDto';
+import { ApiTags } from '@nestjs/swagger';
 
+@ApiTags('Supervisor')
 @Controller('supervisor')
 export class SupervisorController {
   constructor(private readonly supervisorService: SupervisorService) {}
