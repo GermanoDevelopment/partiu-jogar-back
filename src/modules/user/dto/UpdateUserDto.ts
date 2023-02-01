@@ -1,15 +1,4 @@
-import { ApiPropertyOptional } from "@nestjs/swagger";
+import { CreateUserDto } from './CreateUserDto';
+import { ApiPropertyOptional, PartialType } from "@nestjs/swagger";
 
-export class UpdateUserDto {
-    @ApiPropertyOptional()
-    name: string;
-    
-    @ApiPropertyOptional()
-    email: string;
-    
-    @ApiPropertyOptional()
-    cpf: string;
-    
-    @ApiPropertyOptional()
-    password: string;
-}
+export class UpdateUserDto extends PartialType(CreateUserDto    ) {}

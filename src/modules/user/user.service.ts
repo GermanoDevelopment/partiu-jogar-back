@@ -36,12 +36,12 @@ export class UserService {
   }
 
   async findOne(id: string): Promise<User> {
-    return await this.findOne(id);
+    return await this.findBy({ id });
   }
 
   async update(id: string, updateUserDto: UpdateUserDto): Promise<User> {
     await this.repo.update(id, updateUserDto);
-    return await this.findOne(id);
+    return await this.findBy({ id });
   }
 
   async remove(id: string): Promise<User> {

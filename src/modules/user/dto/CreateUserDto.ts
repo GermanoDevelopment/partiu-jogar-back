@@ -1,15 +1,7 @@
-import { ApiProperty, ApiPropertyOptional } from "@nestjs/swagger";
+import { ApiProperty, ApiPropertyOptional, PickType } from "@nestjs/swagger";
+import { UserDto } from './UserDto';
 
-export class CreateUserDto {
-    @ApiPropertyOptional()
-    name: string;
-    
-    @ApiProperty()
-    cpf: string;
-
-    @ApiProperty()
-    email: string;
-
-    @ApiProperty()
-    password: string;
-}
+export class CreateUserDto extends PickType(
+    UserDto,
+    ["firstname", "lastname", "cpf", "email", "password"]
+) {}
