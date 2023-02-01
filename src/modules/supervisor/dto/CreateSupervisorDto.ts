@@ -1,15 +1,7 @@
-import { ApiProperty, ApiPropertyOptional } from "@nestjs/swagger";
+import { PickType } from "@nestjs/swagger";
+import { SupervisorDto } from "./SupervisorDto";
 
-export class CreateSupervisorDto {
-    @ApiPropertyOptional()
-    name: string;
-    
-    @ApiProperty()
-    cpf: string;
-
-    @ApiProperty()
-    email: string;
-
-    @ApiProperty()
-    password: string;
-}
+export class CreateSupervisorDto extends PickType(
+    SupervisorDto,
+    ["firstname", "lastname", "cpf", "email", "password"]
+) {}

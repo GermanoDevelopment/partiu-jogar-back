@@ -2,7 +2,7 @@ import { Controller, Get, Post, Body, Patch, Param, Delete } from '@nestjs/commo
 import { SupervisorService } from './supervisor.service';
 import { CreateSupervisorDto } from './dto/CreateSupervisorDto';
 import { Supervisor } from './entities/supervisor.entity';
-import { UpdateSupervisorDto } from './dto/UpdateUserDto';
+import { UpdateSupervisorDto } from './dto/UpdateSupervisorDto';
 
 @Controller('supervisor')
 export class SupervisorController {
@@ -13,7 +13,7 @@ export class SupervisorController {
     return await this.supervisorService.create(createSupervisorDto);
   }
 
-  @Get('get-all-supervisor')
+  @Get('get-all-supervisors')
   async findAll(): Promise<Supervisor[]> {
     return await this.supervisorService.findAll();
   }
