@@ -15,6 +15,6 @@ export class School extends AbstractEntity {
     // relations
     @OneToMany(() => Court, (court) => court.school)
     court: Court[];
-    @ManyToOne(() => Supervisor, (supervisor) => supervisor.school)
-    supervisor: Supervisor[];
+    @OneToMany(() => Supervisor, (supervisor) => supervisor.school)
+    supervisors: Supervisor[];
 }

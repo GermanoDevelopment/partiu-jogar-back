@@ -1,7 +1,7 @@
-import { Injectable } from "@nestjs/common";
-import type { TypeOrmModuleOptions } from "@nestjs/typeorm";
-import { SnakeNamingStrategy } from "../../snake-naming.strategy";
-import * as dotenv from "dotenv";
+import { Injectable } from '@nestjs/common';
+import type { TypeOrmModuleOptions } from '@nestjs/typeorm';
+import { SnakeNamingStrategy } from '../../snake-naming.strategy';
+import * as dotenv from 'dotenv';
 
 @Injectable()
 export class ApiConfigService {
@@ -41,13 +41,13 @@ export class ApiConfigService {
 
     get config() {
         return {
-            port: this.getNumber("PORT"),
+            port: this.getNumber('PORT'),
         };
     }
 
     get typeOrmConfig(): TypeOrmModuleOptions {
         const entities = [__dirname + '/../../modules/**/*.entity{.ts,.js}'];
-        const migrations = [__dirname + '/../../migrations/*{.ts,.js}'];
+        const migrations = [__dirname + '/../../database/migrations/*{.ts,.js}'];
 
         return {
             entities,
@@ -68,13 +68,15 @@ export class ApiConfigService {
 
     get documentation() {
         return {
-            isEnabled: this.getBoolean("DOCUMENTATION_ENABLED"),
+            isEnabled: this.getBoolean('DOCUMENTATION_ENABLED'),
         };
     }
 
     get awsConfig() {
         return {
-            
+            apiKey: this.getString('AWS_API_KEY'),
+            bucket: this.getString('AWS_BUCKET_NAME'),
+            secretKey: this.getString('AWS_API_SECRET_KEY'),
         };
     }
 }
