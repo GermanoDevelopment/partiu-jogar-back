@@ -1,26 +1,48 @@
 import { Injectable } from '@nestjs/common';
+import { Schedule } from './entities/schedule.entity';
+import { InjectRepository } from '@nestjs/typeorm';
+import { Repository } from 'typeorm';
 import { CreateScheduleDto } from './dto/CreateScheduleDto';
+import { Court } from '../court/entities/court.entity';
 import { UpdateScheduleDto } from './dto/UpdateScheduleDto';
 
 @Injectable()
 export class ScheduleService {
-  create(createScheduleDto: CreateScheduleDto) {
-    return 'This action adds a new schedule';
+  constructor(
+    @InjectRepository(Schedule)
+    private readonly repo: Repository<Schedule>,
+  ) {}
+
+  async create(createScheduleDto: CreateScheduleDto): Promise<Schedule> {
+    return await this.repo.save(createScheduleDto);
   }
 
-  findAll() {
-    return `This action returns all schedule`;
+  async findAll(): Promise<Schedule[]> {
+    return await this.repo.find();
   }
 
-  findOne(id: number) {
-    return `This action returns a #${id} schedule`;
+  async findOne(id: string): Promise<Schedule> {
+    return await this.findBy({ id });
   }
 
-  update(id: number, updateScheduleDto: UpdateScheduleDto) {
-    return `This action updates a #${id} schedule`;
+  async findBy(options: Partial<{
+    id: string,
+    court: Court
+  }>): Promise<Schedule> {
+    return await this.repo.findOneBy({
+      id: options.id,
+      court: options.court
+    }); 
   }
 
-  remove(id: number) {
-    return `This action removes a #${id} schedule`;
+  async update(id: string, UpdateScheduleDto: UpdateScheduleDto): Promise<Schedule> {
+    await this.repo.update(id, UpdateScheduleDto);
+    return await this.findBy({ id });
+  }
+
+  async remove(id: string): Promise<Schedule> {
+    const removed = await this.findOne(id);
+    await this.repo.delete(id);
+    return removed;
   }
 }

@@ -1,1 +1,3 @@
-export class CreateScheduleDto {}
+import { ScheduleDto } from './ScheduleDto';
+
+export class CreateScheduleDto extends ScheduleDto {}
