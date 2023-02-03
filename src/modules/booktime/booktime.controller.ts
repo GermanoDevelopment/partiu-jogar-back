@@ -1,34 +1,37 @@
 import { Controller, Get, Post, Body, Patch, Param, Delete } from '@nestjs/common';
+import { ApiTags } from '@nestjs/swagger';
 import { BooktimeService } from './booktime.service';
+import { Booktime } from './entities/booktime.entity';
 import { CreateBooktimeDto } from './dto/CreateBooktimeDto';
 import { UpdateBooktimeDto } from './dto/UpdateBooktimeDto';
 
+@ApiTags('Booktime')
 @Controller('booktime')
 export class BooktimeController {
   constructor(private readonly booktimeService: BooktimeService) {}
 
-  @Post()
-  create(@Body() createBooktimeDto: CreateBooktimeDto) {
-    return this.booktimeService.create(createBooktimeDto);
+  @Post('create-booktime')
+  async create(@Body() createBooktimeDto: CreateBooktimeDto): Promise<Booktime> {
+    return await this.booktimeService.create(createBooktimeDto);
   }
 
-  @Get()
-  findAll() {
-    return this.booktimeService.findAll();
+  @Get('get-all-booktimes')
+  async findAll(): Promise<Booktime[]> {
+    return await this.booktimeService.findAll();
   }
 
-  @Get(':id')
-  findOne(@Param('id') id: string) {
-    return this.booktimeService.findOne(+id);
+  @Get('get-booktime/:id')
+  async findOne(@Param('id') id: string): Promise<Booktime> {
+    return await this.booktimeService.findOne(id);
   }
 
-  @Patch(':id')
-  update(@Param('id') id: string, @Body() updateBooktimeDto: UpdateBooktimeDto) {
-    return this.booktimeService.update(+id, updateBooktimeDto);
+  @Patch('update-booktime/:id')
+  async update(@Param('id') id: string, @Body() updateBooktimeDto: UpdateBooktimeDto): Promise<Booktime> {
+    return await this.booktimeService.update(id, updateBooktimeDto);
   }
 
-  @Delete(':id')
-  remove(@Param('id') id: string) {
-    return this.booktimeService.remove(+id);
+  @Delete('delete-booktime/:id')
+  async remove(@Param('id') id: string): Promise<Booktime> {
+    return await this.booktimeService.remove(id);
   }
 }

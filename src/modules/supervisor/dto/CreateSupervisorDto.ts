@@ -6,11 +6,11 @@ IntersectionType(
     PartialType(
         PickType(
             SupervisorDto,
-            ["firstname", "lastname", "school"]
+            ["firstname", "lastname"]
         )
     ),
     PickType(
         SupervisorDto,
-        ["cpf", "email", "password"]
+        ["cpf", "email", "password", "school"]
     )
 ) {}

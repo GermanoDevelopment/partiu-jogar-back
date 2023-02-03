@@ -11,8 +11,12 @@ export class Booktime extends AbstractEntity {
     startDate: Date;
     @Column({ nullable: false, type: 'timestamp without time zone' })
     endDate: Date;
+    // TODO: check if time to book some local could be an enum, eg:
+    // EBookTime { halfhour, onehour, twohours, quartofhour }
     @Column({ nullable: false, default: false })
     reserved: boolean;
+    // TODO: should change this to be nullable true and default null?
+    // approved can be true or false only set by a supervisor
     @Column({ nullable: false, default: false })
     approved: boolean;
     
@@ -23,6 +27,7 @@ export class Booktime extends AbstractEntity {
     @ManyToOne(() => Supervisor, (supervisor) => supervisor.booktimes)
     supervisor: Supervisor;
     
+    // TODO: remove this reference, since it can be picked from schedule.court
     @OneToOne(() => Court, (court) => court)
     court: Court;
 
