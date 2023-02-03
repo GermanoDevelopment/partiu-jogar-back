@@ -1,3 +1,3 @@
-import { SchoolDto } from "./SchoolDto";
+import { SchoolDto } from './SchoolDto';
 
 export class CreateSchoolDto extends SchoolDto {}
