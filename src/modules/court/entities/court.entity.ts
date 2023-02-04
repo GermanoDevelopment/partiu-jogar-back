@@ -5,6 +5,10 @@ import { School } from '../../../modules/school/entities/school.entity';
 
 @Entity()
 export class Court extends AbstractEntity {
+    @Column({ nullable: false, type: 'timestamp without time zone' })
+    startDate: Date;
+    @Column({ nullable: false, type: 'timestamp without time zone' })
+    endDate: Date;
     @Column({ nullable: false })
     name: string;
     @Column({ nullable: true })
