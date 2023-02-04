@@ -11,8 +11,8 @@ export class ScheduleController {
   constructor(private readonly scheduleService: ScheduleService) {}
 
   @Post('create-schedule')
-  async create(@Body() scheduleCourtDto: CreateScheduleDto): Promise<Schedule> {
-    return await this.scheduleService.create(CreateScheduleDto);
+  async create(@Body() createScheduleDto: CreateScheduleDto): Promise<Schedule> {
+    return await this.scheduleService.create(createScheduleDto);
   }
 
   @Get('get-all-schedules')
