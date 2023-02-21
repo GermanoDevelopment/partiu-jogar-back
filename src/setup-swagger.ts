@@ -5,8 +5,8 @@ import { version } from '../package.json';
 
 export function setupSwagger(app: INestApplication, port: number): void {
     const options = new DocumentBuilder()
-    .setTitle("Backend Boilerplate API")
-    .setDescription("Back end API.")
+    .setTitle("Partiu Jogar API")
+    .setDescription("Back-end API.")
     .setVersion(version)
     .build();
 
