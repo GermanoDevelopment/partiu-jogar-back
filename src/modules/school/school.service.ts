@@ -4,6 +4,7 @@ import { UpdateSchoolDto } from './dto/UpdateSchoolDto';
 import { InjectRepository } from '@nestjs/typeorm';
 import { School } from './entities/school.entity';
 import { Repository } from 'typeorm';
+import { SchoolDto } from './dto/SchoolDto';
 
 @Injectable()
 export class SchoolService {
@@ -11,18 +12,6 @@ export class SchoolService {
     @InjectRepository(School)
     private readonly repo: Repository<School>,
   ) {}
-
-  async create(createSchoolDto: CreateSchoolDto): Promise<School> {
-    return await this.repo.save(createSchoolDto);
-  }
-
-  async findAll(): Promise<School[]> {
-    return await this.repo.find();
-  }
-
-  async findOne(id: string): Promise<School> {
-    return await this.findBy({ id });
-  }
 
   async findBy(options: Partial<{
     id: string,
@@ -38,12 +27,24 @@ export class SchoolService {
     });
   }
 
-  async update(id: string, UpdateSchoolDto: UpdateSchoolDto): Promise<School> {
+  async create(createSchoolDto: CreateSchoolDto): Promise<SchoolDto> {
+    return await this.repo.save(createSchoolDto);
+  }
+
+  async findAll(): Promise<SchoolDto[]> {
+    return await this.repo.find();
+  }
+
+  async findOne(id: string): Promise<SchoolDto> {
+    return await this.findBy({ id });
+  }
+
+  async update(id: string, UpdateSchoolDto: UpdateSchoolDto): Promise<SchoolDto> {
     await this.repo.update(id, UpdateSchoolDto);
     return await this.findBy({ id });
   }
 
-  async remove(id: string): Promise<School> {
+  async remove(id: string): Promise<SchoolDto> {
     const removed = await this.findOne(id);
     await this.repo.delete(id);
     return removed;
