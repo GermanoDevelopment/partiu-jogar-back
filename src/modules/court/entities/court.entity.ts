@@ -1,14 +1,11 @@
 import { Schedule } from '../../../modules/schedule/entities/schedule.entity';
 import { AbstractEntity } from '../../../common/abstract.entity';
-import { Column, Entity, ManyToOne, OneToOne } from 'typeorm';
+import { Column, Entity, ManyToOne, OneToMany, OneToOne } from 'typeorm';
 import { School } from '../../../modules/school/entities/school.entity';
+import { Booktime } from 'src/modules/booktime/entities/booktime.entity';
 
 @Entity()
 export class Court extends AbstractEntity {
-    @Column({ nullable: false, type: 'timestamp without time zone' })
-    startDate: Date;
-    @Column({ nullable: false, type: 'timestamp without time zone' })
-    endDate: Date;
     @Column({ nullable: false })
     name: string;
     @Column({ nullable: true })

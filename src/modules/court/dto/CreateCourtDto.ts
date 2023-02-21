@@ -5,7 +5,7 @@ import { CourtDto } from './CourtDto';
 export class CreateCourtDto extends
   IntersectionType(
     PickType(
-      CourtDto, ['startDate', 'endDate', 'name', 'school']
+      CourtDto, ['name', 'school']
     ),
     PartialType(
       PickType(Court, ['address', 'location'])
