@@ -77,8 +77,13 @@ export class ApiConfigService {
 
     get jwtConfig() {
         return {
+<<<<<<< HEAD
             secret: this.getString('JWT_SECRET'),
             expiration: this.getString('JWT_EXPIRATION'),
+=======
+            secret: this.getString("JWT_SECRET"),
+            expiration: this.getNumber("JWT_EXPIRATION"),
+>>>>>>> a7a6654 (fix: Add jwt config.)
         };
     }
 
