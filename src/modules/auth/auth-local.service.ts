@@ -21,10 +21,10 @@ export class AuthLocalService implements AuthService {
         let jwtRes = new JwtResponseDto("", "");
         jwtRes.access_token = this.jwtService.sign({
             id: user.id,
-            name: user.name,
+            name: user.firstname,
             email: user.email,
         });
-        return new AuthUserDto({ name: user.name, email: user.email }, jwtRes);
+        return new AuthUserDto({ name: user.firstname, email: user.email }, jwtRes);
     }
     
     async validateUser(credentials: CredentialsDto): Promise<User> {

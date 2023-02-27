@@ -8,9 +8,8 @@
   "scripts": {
     "prebuild": "rimraf dist",
     "build": "nest build",
-    "start": "nest start",
     "start:dev": "nodemon src/main.ts",
-    "start:prod": "node dist/main",
+    "start:prod": "node dist/src/main",
     "typeorm": "ts-node node_modules/typeorm/cli.js -d ormconfig",
     "migration:generate": "npm run typeorm migration:generate",
     "migration:create": "npm run typeorm migration:create",
@@ -28,6 +27,7 @@
   ],
   "dependencies": {
     "@nestjs/axios": "^0.1.0",
+    "@nestjs/cli": "^9.2.0",
     "@nestjs/common": "^9.0.11",
     "@nestjs/core": "^9.3.9",
     "@nestjs/jwt": "^10.0.1",

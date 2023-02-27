@@ -63,12 +63,22 @@ export class ApiConfigService {
             migrationsRun: true,
             logging: true,
             namingStrategy: new SnakeNamingStrategy(),
+            ssl: {
+                rejectUnauthorized: false
+            },
         }
     }
 
     get documentation() {
         return {
             isEnabled: this.getBoolean('DOCUMENTATION_ENABLED'),
+        };
+    }
+
+    get jwtConfig() {
+        return {
+            secret: this.getString("JWT_SECRET"),
+            expiration: this.getNumber("JWT_EXPIRATION"),
         };
     }
 
