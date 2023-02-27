@@ -75,6 +75,13 @@ export class ApiConfigService {
         };
     }
 
+    get jwtConfig() {
+        return {
+            secret: this.getString("JWT_SECRET"),
+            expiration: this.getNumber("JWT_EXPIRATION"),
+        };
+    }
+
     get awsConfig() {
         return {
             apiKey: this.getString('AWS_API_KEY'),
