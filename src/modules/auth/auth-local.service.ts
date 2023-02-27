@@ -1,12 +1,13 @@
-import { Injectable } from "@nestjs/common";
-import { UserService } from "../user/user.service";
-import { AuthService } from "./auth.service";
-import { AuthUserDto } from "./dto/AuthUserDto";
-import { JwtResponseDto } from "./dto/JwtResponseDto";
-import { CreateUserDto } from "../user/dto/CreateUserDto";
-import { CredentialsDto } from "./dto/CredentialsDto";
-import { JwtService } from "@nestjs/jwt";
-import { UserDto } from "../user/dto/UserDto";
+import { Injectable } from '@nestjs/common';
+import { UserService } from '../user/user.service';
+import { AuthService } from './auth.service';
+import { JwtService } from '@nestjs/jwt';
+
+import { UserDto } from '../user/dto/UserDto';
+import { AuthUserDto } from './dto/AuthUserDto';
+import { JwtResponseDto } from './dto/JwtResponseDto';
+import { CreateUserDto } from '../user/dto/CreateUserDto';
+import { CredentialsDto } from './dto/CredentialsDto';
 
 @Injectable()
 export class AuthLocalService implements AuthService {
@@ -20,7 +21,7 @@ export class AuthLocalService implements AuthService {
         const user = await this.userService.findOneBy({ email: credentials.email });
         const signUser = new UserDto(user, user.profile);
 
-        let jwtRes = new JwtResponseDto("", "");
+        let jwtRes = new JwtResponseDto('', '');
         jwtRes.access_token = this.jwtService.sign({
             id: signUser.id,
             name: signUser.firstname,
