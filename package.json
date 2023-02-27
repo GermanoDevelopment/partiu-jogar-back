@@ -28,6 +28,7 @@
   ],
   "dependencies": {
     "@nestjs/axios": "^0.1.0",
+    "@nestjs/cli": "^9.2.0",
     "@nestjs/common": "^9.0.11",
     "@nestjs/core": "^9.0.11",
     "@nestjs/jwt": "^10.0.1",
