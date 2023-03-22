@@ -6,7 +6,6 @@ import { ApiProperty } from '@nestjs/swagger';
 
 @Entity()
 export class School extends AbstractEntity {
-    @ApiProperty()
     @Column({ nullable: false })
     name: string;
     @Column({ nullable: true })
