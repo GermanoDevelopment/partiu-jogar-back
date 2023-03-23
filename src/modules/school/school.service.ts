@@ -1,19 +1,21 @@
 import { Injectable } from '@nestjs/common';
+import { InjectRepository } from '@nestjs/typeorm';
+import { Repository } from 'typeorm';
+import { ImageService } from '../image/image.service';
+
+import { School } from './entities/school.entity';
+import { SchoolDto } from './dto/SchoolDto';
+import { FindSchoolDto } from './dto/FindSchoolDto';
 import { CreateSchoolDto } from './dto/CreateSchoolDto';
 import { UpdateSchoolDto } from './dto/UpdateSchoolDto';
-import { InjectRepository } from '@nestjs/typeorm';
-import { School } from './entities/school.entity';
-import { Repository } from 'typeorm';
-import { FindSchoolDto } from './dto/FindSchoolDto';
-import { SchoolDto } from './dto/SchoolDto';
-import { UploadService } from '../upload/upload.service';
+import { CreateImageDto } from '../image/dto/CreateImageDto';
 
 @Injectable()
 export class SchoolService {
   constructor(
     @InjectRepository(School)
     private readonly repo: Repository<School>,
-    readonly uploadService: UploadService,
+    readonly imageService: ImageService,
   ) {}
 
   async findManyBy(options: Partial<FindSchoolDto>): Promise<School[]> {
@@ -32,14 +34,39 @@ export class SchoolService {
 
   async create(
     createSchoolDto: CreateSchoolDto,
-    file: Express.Multer.File,
+    files: { main?: Express.Multer.File, photos?: Array<Express.Multer.File> },
   ): Promise<SchoolDto> {
     let school = this.repo.create();
-    const photos = await this.uploadService.uploadFile(file);
     
-    school = { ...school, photos };
+    if (files.main) {
+      const mainImg = await this.imageService.create(
+        { schoolId: school.id } as CreateImageDto,
+        files.main,
+      );
+      const main = await this.imageService.findOneBy({ id: mainImg.id });
+      school = { ...school, main };
+    }
+    if (files.photos && files.photos.length <= 4) {
+      let photoImgs = files.photos.map((photoImg) => {
+        return this.imageService.create(
+          { schoolId: school.id } as CreateImageDto,
+          photoImg,
+        );
+      });
+      const photos = await Promise.all(photoImgs);
+      const imgs = photos.map((img) => {
+        return this.imageService.findOneBy({ id: img.id });
+      });
+      const images = await Promise.all(imgs);
 
-    school = await this.repo.save(createSchoolDto);
+      school = { ...school, images };
+    }
+    
+    school = { ...school, ...createSchoolDto };
+    
+    school = await this.repo.save(school);
+    // console.log(school);
+
     return new SchoolDto(school);
   }
 

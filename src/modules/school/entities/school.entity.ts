@@ -20,7 +20,7 @@ export class School extends AbstractEntity {
     supervisors: Supervisor[];
 
     @OneToOne(() => Image, (image) => image.schoolMain)
-    main: Image[];
+    main: Image;
     @OneToMany(() => Image, (image) => image.school)
     images: Image[];
 }
