@@ -1,13 +1,15 @@
-import { IntersectionType, PartialType, PickType } from '@nestjs/swagger';
-import { Court } from '../entities/court.entity';
-import { CourtDto } from './CourtDto';
+import { ApiProperty, ApiPropertyOptional } from '@nestjs/swagger';
 
-export class CreateCourtDto extends
-  IntersectionType(
-    PickType(
-      CourtDto, ['name', 'school']
-    ),
-    PartialType(
-      PickType(Court, ['address', 'location'])
-    )
-  ) {}
+export class CreateCourtDto {
+  @ApiProperty()
+  name: string;
+  
+  @ApiProperty()
+  schoolId: string;
+  
+  @ApiPropertyOptional()
+  address: string;
+  
+  @ApiPropertyOptional()
+  location: string;
+}
