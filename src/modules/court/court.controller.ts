@@ -1,10 +1,13 @@
-import { Controller, Get, Post, Body, Patch, Param, Delete } from '@nestjs/common';
+import { Controller, Get, Post, Body, Patch, Param, Delete, UseInterceptors, UploadedFile } from '@nestjs/common';
+import { FileFieldsInterceptor } from '@nestjs/platform-express';
 import { ApiTags } from '@nestjs/swagger';
 import { CourtService } from './court.service';
+import { LoggedUser } from '../../decorators/logged-user.decorator';
 
 import { CourtDto } from './dto/CourtDto';
 import { CreateCourtDto } from './dto/CreateCourtDto';
 import { UpdateCourtDto } from './dto/UpdateCourtDto';
+import { UserDto } from '../user/dto/UserDto';
 
 @ApiTags('Court')
 @Controller('court')
@@ -12,8 +15,16 @@ export class CourtController {
   constructor(private readonly courtService: CourtService) {}
 
   @Post('create-court')
-  async create(@Body() createCourtDto: CreateCourtDto): Promise<CourtDto> {
-    return await this.courtService.create(createCourtDto);
+  @UseInterceptors(FileFieldsInterceptor([
+    { name: 'main', maxCount: 1 },
+    { name: 'photos', maxCount: 4 },
+  ]))
+  async create(
+    @LoggedUser() user: UserDto,
+    @Body() createCourtDto: CreateCourtDto,
+    @UploadedFile() files: { main?: Express.Multer.File, photos?: Array<Express.Multer.File> },
+  ): Promise<CourtDto> {
+    return await this.courtService.create(user, createCourtDto, files);
   }
 
   @Get('get-all-courts')

@@ -8,6 +8,10 @@ import { CourtDto } from './dto/CourtDto';
 import { FindCourtDto } from './dto/FindCourtDto';
 import { CreateCourtDto } from './dto/CreateCourtDto';
 import { UpdateCourtDto } from './dto/UpdateCourtDto';
+import { UploadService } from '../upload/upload.service';
+import { UserDto } from '../user/dto/UserDto';
+import { ImageService } from '../image/image.service';
+import { CreateImageDto } from '../image/dto/CreateImageDto';
 
 @Injectable()
 export class CourtService {
@@ -16,6 +20,7 @@ export class CourtService {
     private readonly repo: Repository<Court>,
     @Inject(forwardRef(() => SchoolService))
     readonly schoolService: SchoolService,
+    readonly imageService: ImageService,
   ) {}
 
   async findManyBy(options: Partial<FindCourtDto>): Promise<Court[]> {
@@ -29,14 +34,32 @@ export class CourtService {
     return courts[0];
   }
 
-  async create(createCourtDto: CreateCourtDto): Promise<CourtDto> {
+  async create(
+    user: UserDto,
+    createCourtDto: CreateCourtDto,
+    files: { main?: Express.Multer.File, photos?: Array<Express.Multer.File> },
+  ): Promise<CourtDto> {
     let court = this.repo.create();
     const school = await this.schoolService.findOneBy({ id: createCourtDto.schoolId });
 
     court = { ...court, ...createCourtDto, school };
     
     court = await this.repo.save(court);
-    console.log(court);
+
+    if (files.main) {
+      const mainImg = await this.imageService.create(
+        { courtId: court.id } as CreateImageDto,
+        files.main
+      );
+      const main = await this.imageService.findOneBy({ id: mainImg.id });
+      court = { ...court, main };
+    }
+    if (files.photos) {
+      // TODO: upload many photos
+    }
+
+    court = await this.repo.save(court);
+    // console.log(court);
 
     return new CourtDto(court);
   }
