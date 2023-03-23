@@ -19,6 +19,8 @@ export class Court extends AbstractEntity {
     @ManyToOne(() => School, (school) => school.court)
     school: School;
 
+    @OneToOne(() => Image, (image) => image.courtMain)
+    main: Image;
     @OneToMany(() => Image, (image) => image.court)
     images: Image[];
 }
