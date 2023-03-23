@@ -1,8 +1,8 @@
 import { AbstractEntity } from '../../../common/abstract.entity';
 import { Column, Entity, OneToMany } from 'typeorm';
-import { Supervisor } from '../../../modules/supervisor/entities/supervisor.entity';
-import { Court } from '../../../modules/court/entities/court.entity';
-import { ApiProperty } from '@nestjs/swagger';
+import { Supervisor } from '../../supervisor/entities/supervisor.entity';
+import { Court } from '../../court/entities/court.entity';
+import { Image } from '../../image/entities/image.entity';
 
 @Entity()
 export class School extends AbstractEntity {
@@ -18,4 +18,6 @@ export class School extends AbstractEntity {
     court: Court[];
     @OneToMany(() => Supervisor, (supervisor) => supervisor.school)
     supervisors: Supervisor[];
+    @OneToMany(() => Image, (image) => image.school)
+    images: Image[];
 }

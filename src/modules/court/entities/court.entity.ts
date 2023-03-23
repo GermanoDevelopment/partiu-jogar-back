@@ -1,8 +1,8 @@
 import { Schedule } from '../../../modules/schedule/entities/schedule.entity';
 import { AbstractEntity } from '../../../common/abstract.entity';
 import { Column, Entity, ManyToOne, OneToMany, OneToOne } from 'typeorm';
-import { School } from '../../../modules/school/entities/school.entity';
-import { Booktime } from 'src/modules/booktime/entities/booktime.entity';
+import { School } from '../../school/entities/school.entity';
+import { Image } from '../../image/entities/image.entity';
 
 @Entity()
 export class Court extends AbstractEntity {
@@ -18,4 +18,7 @@ export class Court extends AbstractEntity {
     schedule: Schedule;
     @ManyToOne(() => School, (school) => school.court)
     school: School;
+
+    @OneToMany(() => Image, (image) => image.court)
+    images: Image[];
 }

@@ -6,12 +6,14 @@ import { School } from './entities/school.entity';
 import { Repository } from 'typeorm';
 import { FindSchoolDto } from './dto/FindSchoolDto';
 import { SchoolDto } from './dto/SchoolDto';
+import { UploadService } from '../upload/upload.service';
 
 @Injectable()
 export class SchoolService {
   constructor(
     @InjectRepository(School)
     private readonly repo: Repository<School>,
+    readonly uploadService: UploadService,
   ) {}
 
   async findManyBy(options: Partial<FindSchoolDto>): Promise<School[]> {
@@ -28,8 +30,16 @@ export class SchoolService {
     return schools[0];
   }
 
-  async create(createSchoolDto: CreateSchoolDto): Promise<SchoolDto> {
-    const school = await this.repo.save(createSchoolDto);
+  async create(
+    createSchoolDto: CreateSchoolDto,
+    file: Express.Multer.File,
+  ): Promise<SchoolDto> {
+    let school = this.repo.create();
+    const photos = await this.uploadService.uploadFile(file);
+    
+    school = { ...school, photos };
+
+    school = await this.repo.save(createSchoolDto);
     return new SchoolDto(school);
   }
 

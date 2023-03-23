@@ -1,3 +1,10 @@
-import { SchoolDto } from './SchoolDto';
+import { ApiPropertyOptional } from '@nestjs/swagger';
 
-export class CreateSchoolDto extends SchoolDto {}
+export class CreateSchoolDto {
+    @ApiPropertyOptional()
+    name: string;
+    @ApiPropertyOptional()
+    location: string;
+    @ApiPropertyOptional()
+    address: string;
+}
