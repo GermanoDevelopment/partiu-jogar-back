@@ -1,12 +1,11 @@
 import { AbstractEntity } from '../../../common/abstract.entity';
-import { Column, Entity, OneToMany } from 'typeorm';
-import { Supervisor } from '../../../modules/supervisor/entities/supervisor.entity';
-import { Court } from '../../../modules/court/entities/court.entity';
-import { ApiProperty } from '@nestjs/swagger';
+import { Column, Entity, OneToMany, OneToOne } from 'typeorm';
+import { Supervisor } from '../../supervisor/entities/supervisor.entity';
+import { Court } from '../../court/entities/court.entity';
+import { Image } from '../../image/entities/image.entity';
 
 @Entity()
 export class School extends AbstractEntity {
-    @ApiProperty()
     @Column({ nullable: false })
     name: string;
     @Column({ nullable: true })
@@ -19,4 +18,9 @@ export class School extends AbstractEntity {
     court: Court[];
     @OneToMany(() => Supervisor, (supervisor) => supervisor.school)
     supervisors: Supervisor[];
+
+    @OneToOne(() => Image, (image) => image.schoolMain)
+    main: Image;
+    @OneToMany(() => Image, (image) => image.school)
+    images: Image[];
 }
