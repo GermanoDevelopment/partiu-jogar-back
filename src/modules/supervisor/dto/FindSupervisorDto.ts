@@ -1,4 +1,4 @@
-import { ApiPropertyOptional } from "@nestjs/swagger";
+import { ApiPropertyOptional } from '@nestjs/swagger';
 
 export class FindSupervisorDto {
   @ApiPropertyOptional()
@@ -12,4 +12,10 @@ export class FindSupervisorDto {
 
   @ApiPropertyOptional()
   email: string;
+
+  @ApiPropertyOptional()
+  schoolId: string;
+
+  @ApiPropertyOptional()
+  booktimeId: string;
 }

@@ -1,51 +1,105 @@
-import { Injectable } from '@nestjs/common';
+import { forwardRef, Inject, Injectable } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Repository } from 'typeorm';
-import { CreateSupervisorDto } from './dto/CreateSupervisorDto';
+import { SchoolService } from '../school/school.service';
+import { ProfileService } from '../profile/profile.service';
+import { ERole } from '../../constants/role.enum';
+
 import { Supervisor } from './entities/supervisor.entity';
+import { SupervisorDto } from './dto/SupervisorDto';
+import { FindSupervisorDto } from './dto/FindSupervisorDto';
+import { CreateSupervisorDto } from './dto/CreateSupervisorDto';
 import { UpdateSupervisorDto } from './dto/UpdateSupervisorDto';
+import { UpdateProfileDto } from '../profile/dto/UpdateProfileDto';
 
 @Injectable()
 export class SupervisorService {
   constructor(
     @InjectRepository(Supervisor)
     private readonly repo: Repository<Supervisor>,
+    readonly schoolService: SchoolService,
+    @Inject(forwardRef(() => ProfileService))
+    readonly profileService: ProfileService,
   ) {}
 
-  async create(createSupervisorDto: CreateSupervisorDto): Promise<Supervisor> {
-      return await this.repo.save(createSupervisorDto);
-    }
+  // TODO: find by schools and approved booktimes
+  async findManyBy(options: Partial<FindSupervisorDto>): Promise<Supervisor[]> {
+    const school = await this.schoolService.findOneBy({ id: options.schoolId });
+    return await this.repo.findBy({
+      id: options.id,
+      email: options.email,
+      school,
+    });
+  }
 
-  async findAll(): Promise<Supervisor[]> {
-      return await this.repo.find();
-    }
+  async findOneBy(options: Partial<FindSupervisorDto>): Promise<Supervisor> {
+    const supervisors = await this.findManyBy(options) as Supervisor[];
+    return supervisors[0];
+  }
 
-  async findOne(id: string): Promise<Supervisor> {
-      return await this.findBy({ id });
-    }
+  async create(createSupervisorDto: CreateSupervisorDto): Promise<SupervisorDto> {
+    let supervisor = this.repo.create();
 
-    async findBy(options: Partial<{
-      id: string,
-      cpf: string,
-      name: string,
-      email: string
-    }>): Promise<Supervisor> {
-      return await this.repo.findOneBy({
-        id: options.id,
-        cpf: options.cpf,
-        firstname: options.name,
-        email: options.email,
-      });
+    const createProfile = { 
+      firstname: createSupervisorDto.firstname,
+      lastname: createSupervisorDto.lastname,
+      cpf: createSupervisorDto.cpf,
+      confirmed: false,
+    };
+    const profileDto = await this.profileService.create(createProfile);
+    const profile = await this.profileService.findOneBy({ id: profileDto.id });
+
+    supervisor = { 
+      ...supervisor, 
+      ...createSupervisorDto,
+      role: ERole.SUPERVISOR,
+      profile,
+    };
+
+    supervisor = await this.repo.save(supervisor);
+    // console.log(supervisor);
+    
+    return new SupervisorDto(supervisor);
+  }
+
+  async findAll(): Promise<SupervisorDto[]> {
+    const supervisors = await this.repo.find();
+    return supervisors.map((supervisor) => new SupervisorDto(supervisor));
+  }
+
+  async findOne(id: string): Promise<SupervisorDto> {
+    const supervisor = await this.findOneBy({ id });
+    return new SupervisorDto(supervisor);
+  }
+    
+  async update(id: string, updateSupervisorDto: UpdateSupervisorDto): Promise<SupervisorDto> {
+    let supervisor = await this.findOneBy({ id });
+    supervisor = { ...supervisor, ...updateSupervisorDto };
+
+    // update school
+    if (updateSupervisorDto.schoolId) {
+      const school = await this.schoolService.findOneBy({ id: updateSupervisorDto.schoolId });
+      supervisor = { ...supervisor, school };
     }
     
-  async update(id: string, UpdateSupervisorDto: UpdateSupervisorDto): Promise<Supervisor> {
-      await this.repo.update(id, UpdateSupervisorDto);
-      return await this.findBy({ id });
-    }
+    // update profile
+    const updateProfile: UpdateProfileDto = { ...updateSupervisorDto };
 
-    async remove(id: string): Promise<Supervisor> {
-      const removed = await this.findOne(id);
-      await this.repo.delete(id);
-      return removed;
+    if (Object.keys(updateProfile).length) {
+      await this.profileService.update(supervisor.profile.id, updateProfile);
+      const profile = await this.profileService.findOneBy({ id: supervisor.profile.id });
+      supervisor = { ...supervisor, profile };
+    }
+    
+    await this.repo.update(id, supervisor);
+    // console.log(supervisor);
+    
+    return await this.findOne(id);
+  }
+
+    async remove(id: string): Promise<SupervisorDto> {
+      const supervisor = await this.findOneBy({ id });
+      await this.repo.remove(supervisor);
+      return new SupervisorDto(supervisor);
     }
 }

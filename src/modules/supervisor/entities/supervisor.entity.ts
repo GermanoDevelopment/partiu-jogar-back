@@ -1,22 +1,18 @@
-import { Column, Entity, ManyToOne, OneToMany } from 'typeorm';
-import { School } from '../../../modules/school/entities/school.entity';
-import { Booktime } from '../../../modules/booktime/entities/booktime.entity';
-import { Profile } from '../../../modules/user/entities/profile.entity';
+import { ChildEntity, Column, ManyToOne, OneToMany } from 'typeorm';
 import { ERole } from '../../../constants/role.enum';
-import { ApiProperty, ApiPropertyOptional } from '@nestjs/swagger';
+import { User } from '../../user/entities/user.entity';
+import { School } from '../../school/entities/school.entity';
+import { Booktime } from '../../booktime/entities/booktime.entity';
 
-@Entity()
-export class Supervisor extends Profile {
-    @ApiProperty()
+@ChildEntity()
+export class Supervisor extends User {
     @Column({ nullable: false, default: ERole.SUPERVISOR, enum: ERole, type: 'enum' })
     role: ERole;
 
     // relations
-    @ApiPropertyOptional()
     @ManyToOne(() => School, (school) => school.supervisors)
     school: School;
     
-    @ApiPropertyOptional()
     @OneToMany(() => Booktime, (booktime) => booktime.supervisor)
     booktimes: Booktime[];
 }
