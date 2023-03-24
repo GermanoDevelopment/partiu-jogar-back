@@ -1,4 +1,9 @@
-import { PartialType } from '@nestjs/swagger';
-import { CreateBooktimeDto } from './CreateBooktimeDto';
+import { ApiPropertyOptional } from '@nestjs/swagger';
 
-export class UpdateBooktimeDto extends PartialType(CreateBooktimeDto) {}
+export class UpdateBooktimeDto {
+    @ApiPropertyOptional()
+    startDate: Date;
+    
+    @ApiPropertyOptional()
+    endDate: Date;
+}

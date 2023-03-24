@@ -1,7 +1,15 @@
-import { PickType } from '@nestjs/swagger';
-import { BooktimeDto } from './BooktimeDto';
+import { ApiProperty } from '@nestjs/swagger';
 
-export class CreateBooktimeDto extends PickType(
-  BooktimeDto,
-  ['startDate', 'endDate', 'schedule']
-) {}
+export class CreateBooktimeDto {
+  @ApiProperty()
+  startDate: Date;
+  
+  @ApiProperty()
+  endDate: Date;
+  
+  @ApiProperty()
+  applicantId: string;
+  
+  @ApiProperty()
+  courtId: string;
+}

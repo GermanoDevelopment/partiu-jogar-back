@@ -1,9 +1,9 @@
 import { AbstractEntity } from '../../../common/abstract.entity';
 import { Column, Entity, ManyToOne, OneToOne } from 'typeorm';
-import { User } from '../../../modules/user/entities/user.entity';
-import { Supervisor } from '../../../modules/supervisor/entities/supervisor.entity';
-import { Court } from '../../../modules/court/entities/court.entity';
-import { Schedule } from '../../../modules/schedule/entities/schedule.entity';
+import { Court } from '../../court/entities/court.entity';
+import { Supervisor } from '../../supervisor/entities/supervisor.entity';
+import { CommonUser } from '../../user/entities/common-user.entity';
+import { Schedule } from '../../schedule/entities/schedule.entity';
 
 @Entity()
 export class Booktime extends AbstractEntity {
@@ -11,8 +11,10 @@ export class Booktime extends AbstractEntity {
     startDate: Date;
     @Column({ nullable: false, type: 'timestamp without time zone' })
     endDate: Date;
+
     // TODO: check if time to book some local could be an enum, eg:
     // EBookTime { halfhour, onehour, twohours, quartofhour }
+    
     @Column({ nullable: false, default: false })
     reserved: boolean;
     // TODO: should change this to be nullable true and default null?
@@ -21,17 +23,15 @@ export class Booktime extends AbstractEntity {
     approved: boolean;
     
     // relations
-    @ManyToOne(() => User, (user) => user.booktimes)
-    applicant: User;
+    @ManyToOne(() => CommonUser, (user) => user.booktimes)
+    applicant: CommonUser;
     
     @ManyToOne(() => Supervisor, (supervisor) => supervisor.booktimes)
     supervisor: Supervisor;
     
-    // TODO: remove this reference, since it can be picked from schedule.court
     @OneToOne(() => Court, (court) => court)
     court: Court;
 
     @ManyToOne(() => Schedule, (schedule) => schedule.booktimes)
     schedule: Schedule;
-
 }

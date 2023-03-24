@@ -1,6 +1,4 @@
 import { ApiPropertyOptional } from '@nestjs/swagger';
-import { Supervisor } from 'src/modules/supervisor/entities/supervisor.entity';
-import { User } from 'src/modules/user/entities/user.entity';
 
 export class FindBooktimeDto {
   @ApiPropertyOptional()
@@ -11,16 +9,16 @@ export class FindBooktimeDto {
   
   @ApiPropertyOptional()
   endDate: Date;
-
+  
   @ApiPropertyOptional()
   reserved: boolean;
-
+  
   @ApiPropertyOptional()
   approved: boolean;
   
   @ApiPropertyOptional()
-  applicant: User;
-
+  applicantId: string;
+  
   @ApiPropertyOptional()
-  supervisor: Supervisor;
+  supervisorId: string;
 }
