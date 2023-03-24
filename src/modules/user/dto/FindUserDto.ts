@@ -1,15 +1,12 @@
-import { ApiPropertyOptional } from "@nestjs/swagger";
+import { ApiPropertyOptional } from '@nestjs/swagger';
 
 export class FindUserDto {
     @ApiPropertyOptional()
     id: string;
-    
-    @ApiPropertyOptional()
-    name: string;
-    
     @ApiPropertyOptional()
     cpf: string;
-
+    @ApiPropertyOptional()
+    name: string;
     @ApiPropertyOptional()
     email: string;
 }
