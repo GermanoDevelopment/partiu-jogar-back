@@ -1,5 +1,4 @@
 import { Injectable } from "@nestjs/common";
-import { User } from "../user/entities/user.entity";
 import { UserService } from "../user/user.service";
 import { AuthService } from "./auth.service";
 import { AuthUserDto } from "./dto/AuthUserDto";
@@ -7,36 +6,39 @@ import { JwtResponseDto } from "./dto/JwtResponseDto";
 import { CreateUserDto } from "../user/dto/CreateUserDto";
 import { CredentialsDto } from "./dto/CredentialsDto";
 import { JwtService } from "@nestjs/jwt";
+import { UserDto } from "../user/dto/UserDto";
 
 @Injectable()
 export class AuthLocalService implements AuthService {
     
     constructor(
-        private readonly userService: UserService,
-        private readonly jwtService: JwtService,
+        readonly userService: UserService,
+        readonly jwtService: JwtService,
     ) {}
     
     async login(credentials: CredentialsDto): Promise<AuthUserDto> {
-        const user = await this.userService.findBy({ email: credentials.email });
+        const user = await this.userService.findOneBy({ email: credentials.email });
+        const signUser = new UserDto(user, user.profile);
+
         let jwtRes = new JwtResponseDto("", "");
         jwtRes.access_token = this.jwtService.sign({
-            id: user.id,
-            name: user.name,
-            email: user.email,
+            id: signUser.id,
+            name: signUser.firstname,
+            email: signUser.email,
         });
-        return new AuthUserDto({ name: user.name, email: user.email }, jwtRes);
+        return new AuthUserDto({ name: signUser.firstname, email: signUser.email }, jwtRes);
     }
     
-    async validateUser(credentials: CredentialsDto): Promise<User> {
-        const user = await this.userService.findBy({ email: credentials.email });
+    async validateUser(credentials: CredentialsDto): Promise<UserDto> {
+        const user = await this.userService.findOneBy({ email: credentials.email });
         
         if (user && user.password === credentials.password) {
-            return user;
+            return new UserDto(user, user.profile);
         }
         return null;
     }
 
-    async registerUser(createUserDto: CreateUserDto): Promise<User> {
+    async registerUser(createUserDto: CreateUserDto): Promise<UserDto> {
         return await this.userService.create(createUserDto);
     }
 }
