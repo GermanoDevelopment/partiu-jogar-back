@@ -8,14 +8,8 @@ import { SchoolDto } from './dto/SchoolDto';
 import { FindSchoolDto } from './dto/FindSchoolDto';
 import { CreateSchoolDto } from './dto/CreateSchoolDto';
 import { UpdateSchoolDto } from './dto/UpdateSchoolDto';
-<<<<<<< HEAD
-import { InjectRepository } from '@nestjs/typeorm';
-import { School } from './entities/school.entity';
-import { Repository } from 'typeorm';
-import { SchoolDto } from './dto/SchoolDto';
-=======
+
 import { CreateImageDto } from '../image/dto/CreateImageDto';
->>>>>>> 3bb1daf5db0a6041398dbef9436c468c06592af3
 
 @Injectable()
 export class SchoolService {
@@ -25,18 +19,9 @@ export class SchoolService {
     readonly imageService: ImageService,
   ) {}
 
-<<<<<<< HEAD
-  async findBy(options: Partial<{
-    id: string,
-    name: string,
-    address: string,
-    location: string
-  }>): Promise<School> {
-    return await this.repo.findOneBy({
-=======
+
   async findManyBy(options: Partial<FindSchoolDto>): Promise<School[]> {
     return await this.repo.findBy({
->>>>>>> 3bb1daf5db0a6041398dbef9436c468c06592af3
       id: options.id,
       name: options.name,
       address: options.address,
@@ -44,29 +29,6 @@ export class SchoolService {
     });
   }
 
-<<<<<<< HEAD
-  async create(createSchoolDto: CreateSchoolDto): Promise<SchoolDto> {
-    return await this.repo.save(createSchoolDto);
-  }
-
-  async findAll(): Promise<SchoolDto[]> {
-    return await this.repo.find();
-  }
-
-  async findOne(id: string): Promise<SchoolDto> {
-    return await this.findBy({ id });
-  }
-
-  async update(id: string, UpdateSchoolDto: UpdateSchoolDto): Promise<SchoolDto> {
-    await this.repo.update(id, UpdateSchoolDto);
-    return await this.findBy({ id });
-  }
-
-  async remove(id: string): Promise<SchoolDto> {
-    const removed = await this.findOne(id);
-    await this.repo.delete(id);
-    return removed;
-=======
   async findOneBy(options: Partial<FindSchoolDto>): Promise<School> {
     const schools = await this.findManyBy(options) as School[];
     return schools[0];
@@ -131,6 +93,5 @@ export class SchoolService {
     const school = await this.findOneBy({ id });
     await this.repo.remove(school);
     return new SchoolDto(school);
->>>>>>> 3bb1daf5db0a6041398dbef9436c468c06592af3
   }
 }
