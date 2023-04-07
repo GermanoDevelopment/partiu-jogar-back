@@ -8,6 +8,7 @@ import { SchoolDto } from './dto/SchoolDto';
 import { FindSchoolDto } from './dto/FindSchoolDto';
 import { CreateSchoolDto } from './dto/CreateSchoolDto';
 import { UpdateSchoolDto } from './dto/UpdateSchoolDto';
+
 import { CreateImageDto } from '../image/dto/CreateImageDto';
 
 @Injectable()
@@ -17,6 +18,7 @@ export class SchoolService {
     private readonly repo: Repository<School>,
     readonly imageService: ImageService,
   ) {}
+
 
   async findManyBy(options: Partial<FindSchoolDto>): Promise<School[]> {
     return await this.repo.findBy({
