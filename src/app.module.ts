@@ -14,7 +14,6 @@ import { BooktimeModule } from './modules/booktime/booktime.module';
 import { CourtModule } from './modules/court/court.module';
 import { SupervisorModule } from './modules/supervisor/supervisor.module';
 import { ImageModule } from './modules/image/image.module';
-import { ProfileModule } from './modules/profile/profile.module';
 
 @Module({
   imports: [
@@ -28,7 +27,6 @@ import { ProfileModule } from './modules/profile/profile.module';
     SharedModule,
     AuthModule,
     UserModule,
-    ProfileModule,
     SupervisorModule,
     SchoolModule,
     ScheduleModule,

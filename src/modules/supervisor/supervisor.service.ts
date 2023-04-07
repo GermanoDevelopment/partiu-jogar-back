@@ -1,8 +1,7 @@
-import { forwardRef, Inject, Injectable } from '@nestjs/common';
+import { Injectable } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Repository } from 'typeorm';
 import { SchoolService } from '../school/school.service';
-import { ProfileService } from '../profile/profile.service';
 import { ERole } from '../../constants/role.enum';
 
 import { Supervisor } from './entities/supervisor.entity';
@@ -10,7 +9,6 @@ import { SupervisorDto } from './dto/SupervisorDto';
 import { FindSupervisorDto } from './dto/FindSupervisorDto';
 import { CreateSupervisorDto } from './dto/CreateSupervisorDto';
 import { UpdateSupervisorDto } from './dto/UpdateSupervisorDto';
-import { UpdateProfileDto } from '../profile/dto/UpdateProfileDto';
 
 @Injectable()
 export class SupervisorService {
@@ -18,8 +16,6 @@ export class SupervisorService {
     @InjectRepository(Supervisor)
     private readonly repo: Repository<Supervisor>,
     readonly schoolService: SchoolService,
-    @Inject(forwardRef(() => ProfileService))
-    readonly profileService: ProfileService,
   ) {}
 
   // TODO: find by schools and approved booktimes
@@ -40,20 +36,10 @@ export class SupervisorService {
   async create(createSupervisorDto: CreateSupervisorDto): Promise<SupervisorDto> {
     let supervisor = this.repo.create();
 
-    const createProfile = { 
-      firstname: createSupervisorDto.firstname,
-      lastname: createSupervisorDto.lastname,
-      cpf: createSupervisorDto.cpf,
-      confirmed: false,
-    };
-    const profileDto = await this.profileService.create(createProfile);
-    const profile = await this.profileService.findOneBy({ id: profileDto.id });
-
     supervisor = { 
       ...supervisor, 
       ...createSupervisorDto,
       role: ERole.SUPERVISOR,
-      profile,
     };
 
     supervisor = await this.repo.save(supervisor);
@@ -80,15 +66,6 @@ export class SupervisorService {
     if (updateSupervisorDto.schoolId) {
       const school = await this.schoolService.findOneBy({ id: updateSupervisorDto.schoolId });
       supervisor = { ...supervisor, school };
-    }
-    
-    // update profile
-    const updateProfile: UpdateProfileDto = { ...updateSupervisorDto };
-
-    if (Object.keys(updateProfile).length) {
-      await this.profileService.update(supervisor.profile.id, updateProfile);
-      const profile = await this.profileService.findOneBy({ id: supervisor.profile.id });
-      supervisor = { ...supervisor, profile };
     }
     
     await this.repo.update(id, supervisor);

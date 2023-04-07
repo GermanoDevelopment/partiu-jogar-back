@@ -19,7 +19,7 @@ export class AuthLocalService implements AuthService {
     
     async login(credentials: CredentialsDto): Promise<AuthUserDto> {
         const user = await this.userService.findOneBy({ email: credentials.email });
-        const signUser = new UserDto(user, user.profile);
+        const signUser = new UserDto(user);
 
         let jwtRes = new JwtResponseDto('', '');
         jwtRes.access_token = this.jwtService.sign({
@@ -34,7 +34,7 @@ export class AuthLocalService implements AuthService {
         const user = await this.userService.findOneBy({ email: credentials.email });
         
         if (user && user.password === credentials.password) {
-            return new UserDto(user, user.profile);
+            return new UserDto(user);
         }
         return null;
     }
