@@ -63,9 +63,6 @@ export class ApiConfigService {
             migrationsRun: true,
             logging: true,
             namingStrategy: new SnakeNamingStrategy(),
-            ssl: {
-                rejectUnauthorized: false
-            },
         }
     }
 
