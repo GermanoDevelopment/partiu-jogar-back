@@ -11,49 +11,100 @@ import { CreateSchoolDto } from '../../modules/school/dto/CreateSchoolDto';
 import { Image } from '../../modules/image/entities/image.entity';
 import { UploadModule } from '../../modules/upload/upload.module';
 import { UploadService } from '../../modules/upload/upload.service';
+import { IFile } from '../../interfaces/IFile';
+import { FindSchoolDto } from '../../modules/school/dto/FindSchoolDto';
+import TestUtil from '../../common/test/TestUtil';
 
 describe('SchoolService', () => {
-  let moduleRef: TestingModule;
+  let module: TestingModule;
   let service: SchoolService;
   let repo: Repository<School>;
+  let image: ImageService;
+
+  const mockSchoolRepository = {
+    findBy: jest.fn(),
+    findOne: jest.fn(),
+    find: jest.fn(),
+    create: jest.fn(),
+    save: jest.fn(),
+    update: jest.fn(),
+    remove: jest.fn(),
+  };
+
+  const mockImageRepository = {
+    findBy: jest.fn(),
+    find: jest.fn(),
+    create: jest.fn(),
+    remove: jest.fn(),
+  }
+  
+  class mockUploadService extends UploadService {
+   uploadFile(file: IFile): Promise<string> {
+    return Promise.resolve('mock')
+   }
+  }
   
   beforeEach(async () => {
-    moduleRef = await Test.createTestingModule({
-      imports: [ ImageModule ],
+    const module = await Test.createTestingModule({
       providers: [
         SchoolService,
         {
           provide: getRepositoryToken(School),
-          useValue: {
-            create: jest.fn(),
-            save: jest.fn(),
-          },
+          useValue: mockSchoolRepository,
         },
+        ImageService,
+        {
+          provide: getRepositoryToken(Image),
+          useValue: mockImageRepository,
+        },
+        {
+          provide: UploadService,
+          useValue: new mockUploadService()
+        }
       ],
     }).compile();
 
-    service = moduleRef.get<SchoolService>(SchoolService);
-    repo = moduleRef.get<Repository<School>>(getRepositoryToken(School));
+    service = module.get<SchoolService>(SchoolService);
+    repo = module.get<Repository<School>>(getRepositoryToken(School));
+    image = module.get<ImageService>(ImageService);
   });
 
   describe('Service', () => {
-    it('should be defined', ()=> {
+    it('should be defined', () => {
       expect(service).toBeDefined();
       expect(repo).toBeDefined();
+      expect(image).toBeDefined();
     });
   });
 
-  // describe('CRUD', () => {
-  //   it('should create a new school', async () => {
-  //     const create: CreateSchoolDto = {
-  //       name: 'string',
-  //       location: 'string',
-  //       address: 'string',
-  //     };
-  //     const result = await service.create(create, { main: null, photos: null });
-  //     expect(result).toBeDefined();
-  //     expect(repo.create).toBeCalledTimes(1);
-  //     expect(repo.save).toBeCalledTimes(1);
-  //   });
-  // });
+  describe('findManyBy', () => {
+    it('should call findBy method from repository with correct options', async () => {
+      const school: Partial<FindSchoolDto> = TestUtil.giveMeAValidSchool();
+      mockSchoolRepository.findBy.mockReturnValue({
+        id: '1',
+        name: 'Test School',
+        address: '123 Main St',
+        location: 'Test Location'
+      });
+      const schools = await service.findManyBy({
+        id: '1',
+        name: 'Test School',
+        address: '123 Main St',
+        location: 'Test Location'
+      });
+      expect(mockSchoolRepository.findBy).toHaveBeenCalledTimes(1);
+      expect(mockSchoolRepository.findBy).toBeCalledWith({
+        id: '1',
+        name: 'Test School',
+        address: '123 Main St',
+        location: 'Test Location'
+      })
+      expect(schools).toEqual({
+          id: '1',
+          name: 'Test School',
+          address: '123 Main St',
+          location: 'Test Location'
+      })
+    });
+  });
 });
