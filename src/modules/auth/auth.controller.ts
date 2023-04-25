@@ -5,30 +5,33 @@ import { AuthService } from './auth.service';
 import { LoggedUser } from '../../decorators/logged-user.decorator';
 import { LocalAuthGuard } from '../../guards/local-auth.guard';
 import { JwtAuthGuard } from '../../guards/jwt-auth.guard';
+import { Roles } from '../../decorators/roles.decorator';
+import { ERole } from '../../constants/role.enum';
 
 import { User } from '../user/entities/user.entity';
 import { AuthUserDto } from './dto/AuthUserDto';
 import { CreateUserDto } from '../user/dto/CreateUserDto';
 import { CredentialsDto } from './dto/CredentialsDto';
 
-@ApiTags("Auth")
+@ApiTags('Auth')
 @Controller('auth')
 export class AuthController {
   constructor(private readonly authService: AuthService) {}
 
-  @Post("login")
+  @Post('login')
   @UseGuards(LocalAuthGuard)
   async login(@Body() credentials: CredentialsDto): Promise<AuthUserDto> {
     return await this.authService.login(credentials);
   }
 
-  @Post("register")
+  @Post('register')
   async register(@Body() createUserDto: CreateUserDto): Promise<any> {
     return await this.authService.registerUser(createUserDto);
   }
 
-  @Get("me")
+  @Get('me')
   @ApiBearerAuth()
+  @Roles(ERole.SUPERADMIN)
   @UseGuards(JwtAuthGuard)
   async me(@LoggedUser() user): Promise<User> {
     return user;

@@ -34,8 +34,19 @@ export class SupervisorService {
   }
 
   async create(createSupervisorDto: CreateSupervisorDto): Promise<SupervisorDto> {
-    let supervisor = this.repo.create();
+    let supervisor = await this.findOneBy({
+      cpf: createSupervisorDto.cpf,
+      email: createSupervisorDto.email,
+    });
 
+    // TODO
+    if (supervisor) {
+      // throw error "supervisor credentials already registerd"
+      console.log("Supervisor already exists.");
+      return;
+    }
+    
+    supervisor = this.repo.create();
     supervisor = { 
       ...supervisor, 
       ...createSupervisorDto,
@@ -57,7 +68,7 @@ export class SupervisorService {
     const supervisor = await this.findOneBy({ id });
     return new SupervisorDto(supervisor);
   }
-    
+
   async update(id: string, updateSupervisorDto: UpdateSupervisorDto): Promise<SupervisorDto> {
     let supervisor = await this.findOneBy({ id });
     supervisor = { ...supervisor, ...updateSupervisorDto };

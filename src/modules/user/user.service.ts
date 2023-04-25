@@ -6,16 +6,17 @@ import { FindUserDto } from './dto/FindUserDto';
 import { UpdateUserDto } from './dto/UpdateUserDto';
 import { UserDto } from './dto/UserDto';
 import { User } from './entities/user.entity';
+import { CommonUser } from './entities/common-user.entity';
 
 @Injectable()
 export class UserService {
   
   constructor(
-    @InjectRepository(User)
-    private readonly repo: Repository<User>,
+    @InjectRepository(CommonUser)
+    private readonly repo: Repository<CommonUser>,
   ) {}
 
-  async findOneBy(options: Partial<FindUserDto>): Promise<User> {
+  async findOneBy(options: Partial<FindUserDto>): Promise<CommonUser> {
     return await this.repo.findOneBy({
       id: options.id,
       email: options.email,
@@ -29,8 +30,10 @@ export class UserService {
       email: createUserDto.email,
     });
     
+    // TODO
     if (user) {
       // throw error "User already registered"
+      console.log("User already exists.");
       return;
     }
     

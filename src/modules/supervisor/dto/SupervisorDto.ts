@@ -17,8 +17,10 @@ export class SupervisorDto extends AbstractDto {
     this.lastname = entity.lastname;
     this.cpf = entity.cpf;
     this.role = entity.role;
-    this.school = entity.school.id;
-    this.booktimes = entity.booktimes.map((booktime) => booktime.id);
+    if (entity.school)
+      this.school = entity.school.id;
+    if (entity.booktimes)
+      this.booktimes = entity.booktimes.map((booktime) => booktime.id);
     this.email = entity.email;
   }
 }

@@ -3,7 +3,7 @@ import { Column, Entity, TableInheritance } from 'typeorm';
 
 @Entity()
 @TableInheritance({ column: { type: "varchar", name: "type" } })
-export class User extends AbstractEntity {
+export abstract class User extends AbstractEntity {
     @Column({ nullable: true })
     firstname: string;
     

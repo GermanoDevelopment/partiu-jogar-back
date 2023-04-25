@@ -1,5 +1,6 @@
 import { AbstractDto } from '../../../common/dto/AbstractDto';
-import { User } from '../entities/user.entity';
+import { CommonUser } from '../entities/common-user.entity';
+import { ERole } from '../../../constants/role.enum';
 
 export class UserDto extends AbstractDto {
 
@@ -10,12 +11,15 @@ export class UserDto extends AbstractDto {
   cpf: string;
   confirmed: boolean;
 
-  constructor(entity: User) {
+  role: ERole;
+
+  constructor(entity: CommonUser) {
     super(entity);
     this.email = entity.email;
     this.firstname = entity.firstname;
     this.lastname = entity.lastname;
     this.cpf = entity.cpf;
     this.confirmed = entity.confirmed;
+    this.role = entity.role;
   }
 }
