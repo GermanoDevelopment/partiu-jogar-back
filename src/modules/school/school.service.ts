@@ -2,6 +2,8 @@ import { Injectable } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Repository } from 'typeorm';
 import { ImageService } from '../image/image.service';
+import { SupervisorService } from '../supervisor/supervisor.service';
+import { ERole } from '../../constants/role.enum';
 
 import { School } from './entities/school.entity';
 import { SchoolDto } from './dto/SchoolDto';
@@ -10,6 +12,7 @@ import { CreateSchoolDto } from './dto/CreateSchoolDto';
 import { UpdateSchoolDto } from './dto/UpdateSchoolDto';
 
 import { CreateImageDto } from '../image/dto/CreateImageDto';
+import { UserDto } from '../user/dto/UserDto';
 
 @Injectable()
 export class SchoolService {
@@ -17,6 +20,7 @@ export class SchoolService {
     @InjectRepository(School)
     private readonly repo: Repository<School>,
     readonly imageService: ImageService,
+    readonly supervisorService: SupervisorService,
   ) {}
 
 
@@ -84,16 +88,28 @@ export class SchoolService {
     return new SchoolDto(school);
   }
 
-  async update(id: string, updateSchoolDto: UpdateSchoolDto): Promise<SchoolDto> {
+  async update(
+    user: UserDto,
+    id: string,
+    updateSchoolDto: UpdateSchoolDto
+  ): Promise<SchoolDto> {
     let school = await this.findOneBy({ id });
-    school = { ...school, ...updateSchoolDto };
-    await this.repo.update(id, school);
-    return await this.findOne(id);
+    const supervisor = await this.supervisorService.findOneBy({ id: user.id });
+    if (supervisor.role === ERole.SUPERVISORADMIN || school.supervisors.includes(supervisor)) {
+      school = { ...school, ...updateSchoolDto };
+      await this.repo.update(id, school);
+      return await this.findOne(id);
+    }
+    // throw supervisor does not have authorization in this school
   }
-
-  async remove(id: string): Promise<SchoolDto> {
+  
+  async remove(user: UserDto, id: string): Promise<SchoolDto> {
     const school = await this.findOneBy({ id });
-    await this.repo.remove(school);
-    return new SchoolDto(school);
+    const supervisor = await this.supervisorService.findOneBy({ id: user.id });
+    if (supervisor.role === ERole.SUPERVISORADMIN || school.supervisors.includes(supervisor)) {
+      await this.repo.remove(school);
+      return new SchoolDto(school);
+    }
+    // throw supervisor does not have authorization in this school
   }
 }
