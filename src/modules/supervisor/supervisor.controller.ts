@@ -40,11 +40,23 @@ export class SupervisorController {
   }
 
   @Patch('update-supervisor/:id')
+  @Roles(
+    ERole.SUPERADMIN,
+    ERole.SUPERVISORADMIN,
+  )
+  @UseGuards(JwtAuthGuard, RolesGuard)
+  @ApiBearerAuth()
   async update(@Param('id') id: string, @Body() updateSupervisorDto: UpdateSupervisorDto): Promise<SupervisorDto> {
     return await this.supervisorService.update(id, updateSupervisorDto);
   }
 
   @Delete('delete-supervisor/:id')
+  @Roles(
+    ERole.SUPERADMIN,
+    ERole.SUPERVISORADMIN,
+  )
+  @UseGuards(JwtAuthGuard, RolesGuard)
+  @ApiBearerAuth()
   async remove(@Param('id') id: string): Promise<SupervisorDto> {
     return await this.supervisorService.remove(id);
   }

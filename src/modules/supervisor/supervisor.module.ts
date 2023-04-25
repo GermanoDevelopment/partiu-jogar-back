@@ -10,7 +10,7 @@ import { UserModule } from '../user/user.module';
   imports: [
     TypeOrmModule.forFeature([Supervisor]),
     UserModule,
-    SchoolModule,
+    forwardRef(() => SchoolModule),
   ],
   controllers: [SupervisorController],
   providers: [SupervisorService],
