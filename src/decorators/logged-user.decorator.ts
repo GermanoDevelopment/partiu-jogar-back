@@ -1,5 +1,6 @@
 import type { ExecutionContext } from '@nestjs/common';
 import { createParamDecorator } from '@nestjs/common';
+import { UserDto } from '../modules/user/dto/UserDto';
 
 // TODO: return UserDto or DecodedJwt
 export function LoggedUser() {
@@ -9,9 +10,9 @@ export function LoggedUser() {
     const user = request.user;
 
     if (user?.[Symbol.for('isPublic')]) {
-      return;
+      return null;
     }
 
-    return user;
+    return new UserDto(user);
   })();
 }
