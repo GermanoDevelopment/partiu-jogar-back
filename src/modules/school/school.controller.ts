@@ -2,7 +2,7 @@ import { Controller, Get, Post, Body, Patch, Param, Delete, UploadedFile, UseInt
 import { SchoolService } from './school.service';
 import { CreateSchoolDto } from './dto/CreateSchoolDto';
 import { UpdateSchoolDto } from './dto/UpdateSchoolDto';
-import { ApiTags } from '@nestjs/swagger';
+import { ApiConsumes, ApiTags } from '@nestjs/swagger';
 import { SchoolDto } from './dto/SchoolDto';
 import { FileFieldsInterceptor } from '@nestjs/platform-express';
 
@@ -34,7 +34,15 @@ export class SchoolController {
   }
 
   @Patch('update-school/:id')
-  async update(@Param('id') id: string, @Body() updateSchoolDto: UpdateSchoolDto): Promise<SchoolDto> {
+  @UseInterceptors(FileFieldsInterceptor([
+    { name: 'main', maxCount: 1 },
+    { name: 'photos', maxCount: 4 },
+  ]))
+  async update(
+    @Param('id') id: string,
+    @Body() updateSchoolDto: UpdateSchoolDto,
+    @UploadedFile() files: { main?: Express.Multer.File, photos?: Array<Express.Multer.File> },
+  ): Promise<SchoolDto> {
     return await this.schoolService.update(id, updateSchoolDto);
   }
 

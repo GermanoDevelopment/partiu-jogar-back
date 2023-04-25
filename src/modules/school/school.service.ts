@@ -40,28 +40,30 @@ export class SchoolService {
   ): Promise<SchoolDto> {
     let school = this.repo.create();
     
-    if (files.main) {
-      const mainImg = await this.imageService.create(
-        { schoolId: school.id } as CreateImageDto,
-        files.main,
-      );
-      const main = await this.imageService.findOneBy({ id: mainImg.id });
-      school = { ...school, main };
-    }
-    if (files.photos && files.photos.length <= 4) {
-      let photoImgs = files.photos.map((photoImg) => {
-        return this.imageService.create(
+    if (files) {
+      if (files.main) {
+        const mainImg = await this.imageService.create(
           { schoolId: school.id } as CreateImageDto,
-          photoImg,
+          files.main,
         );
-      });
-      const photos = await Promise.all(photoImgs);
-      const imgs = photos.map((img) => {
-        return this.imageService.findOneBy({ id: img.id });
-      });
-      const images = await Promise.all(imgs);
+        const main = await this.imageService.findOneBy({ id: mainImg.id });
+        school = { ...school, main };
+      }
+      if (files.photos && files.photos.length <= 4) {
+        let photoImgs = files.photos.map((photoImg) => {
+          return this.imageService.create(
+            { schoolId: school.id } as CreateImageDto,
+            photoImg,
+          );
+        });
+        const photos = await Promise.all(photoImgs);
+        const imgs = photos.map((img) => {
+          return this.imageService.findOneBy({ id: img.id });
+        });
+        const images = await Promise.all(imgs);
 
-      school = { ...school, images };
+        school = { ...school, images };
+      }
     }
     
     school = { ...school, ...createSchoolDto };
@@ -82,9 +84,9 @@ export class SchoolService {
     return new SchoolDto(school);
   }
 
-  async update(id: string, UpdateSchoolDto: UpdateSchoolDto): Promise<SchoolDto> {
+  async update(id: string, updateSchoolDto: UpdateSchoolDto): Promise<SchoolDto> {
     let school = await this.findOneBy({ id });
-    school = { ...school, ...UpdateSchoolDto}
+    school = { ...school, ...updateSchoolDto };
     await this.repo.update(id, school);
     return await this.findOne(id);
   }
