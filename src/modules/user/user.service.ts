@@ -1,11 +1,10 @@
-import { Injectable } from '@nestjs/common';
+import { BadRequestException, Injectable } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Repository } from 'typeorm';
 import { CreateUserDto } from './dto/CreateUserDto';
 import { FindUserDto } from './dto/FindUserDto';
 import { UpdateUserDto } from './dto/UpdateUserDto';
 import { UserDto } from './dto/UserDto';
-import { User } from './entities/user.entity';
 import { CommonUser } from './entities/common-user.entity';
 
 @Injectable()
@@ -34,7 +33,7 @@ export class UserService {
     if (user) {
       // throw error "User already registered"
       console.log("User already exists.");
-      return;
+      throw new BadRequestException("User already exists!");
     }
     
     user = this.repo.create();
